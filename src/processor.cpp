@@ -20,7 +20,7 @@ using std::vector;
 */
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
-    int sleep_interval = 1000;
+    int sleep_interval = 100;
 
     // Read "previous" cpu utilization
     vector<unsigned long long int> previous_time = LinuxParser::CpuUtilization();

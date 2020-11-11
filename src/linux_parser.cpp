@@ -143,6 +143,7 @@ vector<unsigned long long int> LinuxParser::CpuUtilization() {
           }
       }
   }
+  return output;
 }
 
 // TODO: Read and return the total number of processes
