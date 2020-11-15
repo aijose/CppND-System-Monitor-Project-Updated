@@ -21,6 +21,7 @@ Processor& System::Cpu() { return cpu_; }
 vector<Process>& System::Processes() { 
     vector<int> pids = LinuxParser::Pids();
     processes_.clear();
+    //processes_.resize(0);
     for(auto pid: pids)  {
         processes_.push_back(Process(pid));
     }

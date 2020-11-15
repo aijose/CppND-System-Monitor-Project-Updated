@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <unistd.h>
 
 #include "linux_parser.h"
 
@@ -251,12 +252,12 @@ string LinuxParser::User(int pid) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
-      username="";
       while (linestream >> username >> value1 >> value2) {
         //std::cout << std::endl << username << ":" << value1 << ":" << value2 << std::endl;
         if (value2 == uid) {
           return username;
         }
+        username="";
       }
     }
   }
@@ -266,10 +267,63 @@ string LinuxParser::User(int pid) {
 
 // TODO: Read and return the uptime of a process
 long LinuxParser::UpTime(int pid) { 
-    return 1000;
+    string line;
+    string entry;
+    long starttime = 0;
+    string filename = kProcDirectory + to_string(pid) + kStatFilename;
+    std::ifstream filestream(filename);
+    if (filestream.is_open()) {
+        for(int i=0; i < 22; i++)
+            filestream >> entry;
+        starttime = std::stoi(entry);
+    }
+    float system_uptime = static_cast<float>(LinuxParser::UpTime());
+    float seconds = system_uptime - starttime/sysconf(_SC_CLK_TCK);
+
+    return seconds;
 }
 
 // TODO: Read and return the uptime of a process
 float LinuxParser::CpuUtilization(int pid) { 
-    return 1000.0;
+    float total_time, seconds, cpu_usage, uptime;
+    long utime, stime, cutime, cstime, starttime;
+    string line;
+    string string_entry;
+    long long_entry;
+    string filename = kProcDirectory + to_string(pid) + kStatFilename;
+    std::ifstream filestream(filename);
+    if (filestream.is_open()) {
+        for(int i=0; i < 3; i++)
+            filestream >> string_entry;
+
+        int count = 3;
+        while(filestream >> long_entry) {
+            count++;
+            switch(count) {
+                case 14:
+                    utime = long_entry;
+                    break;
+                case 15:
+                    stime = long_entry;
+                    break;
+                case 16:
+                    cutime = long_entry;
+                    break;
+                case 17:
+                    cstime = long_entry;
+                    break;
+                case 22:
+                    starttime = long_entry;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    uptime = static_cast<float>(LinuxParser::UpTime());
+    total_time = utime + stime;
+    total_time += cutime + cstime; 
+    seconds = uptime - starttime/sysconf(_SC_CLK_TCK);
+    cpu_usage = (total_time/sysconf(_SC_CLK_TCK) / seconds);
+    return cpu_usage;
 }
