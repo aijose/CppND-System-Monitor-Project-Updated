@@ -187,11 +187,20 @@ int LinuxParser::RunningProcesses() {
 
 // TODO: Read and return the command associated with a process
 string LinuxParser::Command(int pid) { 
-  string file = kProcDirectory + to_string(pid) + kCmdlineFilename;
+  //string file = kProcDirectory + to_string(pid) + kCmdlineFilename;
+  string file = kProcDirectory + to_string(pid) + kStatFilename;
+  string dummy;
   string cmd="";
+  string line;
+  cmd.clear();
   std::ifstream filestream(file);
   if (filestream.is_open()) {
-    filestream >> cmd;
+    cmd.resize(0);
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    linestream >> dummy >> cmd;
+    filestream.close();
+    cmd = cmd.substr(1, cmd.size()-2);
     return cmd;
   }
   return cmd;
