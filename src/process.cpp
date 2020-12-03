@@ -21,7 +21,7 @@ Process::Process(int pid) {
 int Process::Pid() { return pid_; }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() { 
+float Process::CpuUtilization() const { 
     return LinuxParser::CpuUtilization(pid_); 
 }
 
@@ -38,7 +38,7 @@ string Process::User() { return uid_; }
 long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
-bool Process::operator<(Process & a) { 
+bool Process::operator<(Process const& a) const { 
     return CpuUtilization() > a.CpuUtilization();
     //return std::atoi(Ram().c_str()) > std::atoi(a.Ram().c_str());
 }
