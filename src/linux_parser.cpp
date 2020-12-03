@@ -102,7 +102,6 @@ long LinuxParser::UpTime() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> uptime >> idletime) {
-          //std::cout << "Uptime = "  << static_cast<long>(uptime) << ", " << idletime << std::endl;
           return static_cast<long>(uptime);
       }
     }
@@ -200,7 +199,7 @@ string LinuxParser::Command(int pid) {
     std::istringstream linestream(line);
     linestream >> cmd;
     filestream.close();
-    cmd = cmd + "                                                                                      ";
+    cmd = cmd + string(80, ' ');
     return cmd;
   }
   return cmd;
@@ -262,7 +261,6 @@ string LinuxParser::User(int pid) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       while (linestream >> username >> value1 >> value2) {
-        //std::cout << std::endl << username << ":" << value1 << ":" << value2 << std::endl;
         if (value2 == uid) {
           return username;
         }

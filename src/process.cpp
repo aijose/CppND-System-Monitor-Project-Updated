@@ -26,7 +26,7 @@ float Process::CpuUtilization() const {
 }
 
 // TODO: Return the command that generated this process
-string Process::Command() { return LinuxParser::Command(pid_); }
+string Process::Command() { return cmd_; }
 
 // TODO: Return this process's memory utilization
 string Process::Ram() { return LinuxParser::Ram(pid_); }
@@ -40,5 +40,4 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 // TODO: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const { 
     return CpuUtilization() > a.CpuUtilization();
-    //return std::atoi(Ram().c_str()) > std::atoi(a.Ram().c_str());
 }
