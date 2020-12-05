@@ -79,13 +79,12 @@ float LinuxParser::MemoryUtilization() {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "MemTotal") {
-          mem_total = value;
-        }
-        else if (key == "MemFree") {
-          mem_free = value;
-        }
+      linestream >> key >> value;
+      if (key == "MemTotal") {
+        mem_total = value;
+      }
+      else if (key == "MemFree") {
+        mem_free = value;
       }
     }
   }
@@ -101,9 +100,8 @@ long LinuxParser::UpTime() {
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      while (linestream >> uptime >> idletime) {
-          return static_cast<long>(uptime);
-      }
+      linestream >> uptime >> idletime;
+      return static_cast<long>(uptime);
     }
   }
   return static_cast<long>(uptime);
@@ -132,14 +130,13 @@ vector<unsigned long long int> LinuxParser::CpuUtilization() {
   if (filestream.is_open()) {
       while (std::getline(filestream, line)) {
           std::istringstream linestream(line);
-          while (linestream >> key) {
-              if (key == "cpu") {
-                  for(int i=0; i < 10; i++) {
-                      linestream >> single_entry;
-                      output.push_back(single_entry);
-                  }
-                  return output;
+          linestream >> key;
+          if (key == "cpu") {
+              for(int i=0; i < 10; i++) {
+                  linestream >> single_entry;
+                  output.push_back(single_entry);
               }
+              return output;
           }
       }
   }
@@ -155,11 +152,9 @@ int LinuxParser::TotalProcesses() {
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "processes") {
+      linestream >> key >> value;
+      if (key == "processes")
           return value;
-        }
-      }
     }
   }
   return value;
@@ -174,11 +169,9 @@ int LinuxParser::RunningProcesses() {
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "procs_running") {
+      linestream >> key >> value;
+      if (key == "procs_running")
           return value;
-        }
-      }
     }
   }
   return value;
@@ -189,16 +182,15 @@ string LinuxParser::Command(int pid) {
   string file = kProcDirectory + to_string(pid) + kCmdlineFilename;
   string cmd="";
   string line;
-  cmd.clear();
   std::ifstream filestream(file);
   if (filestream.is_open()) {
-    cmd.resize(0);
     std::getline(filestream, line);
     for(auto it=line.begin(); it != line.end(); it++)
         if(iscntrl(*it)) (*it) = ' ';
     std::istringstream linestream(line);
     linestream >> cmd;
-    filestream.close();
+    // Add trailing spaces that will overwrite pre-existing 
+    // characters in ncurses
     cmd = cmd + string(80, ' ');
     return cmd;
   }
@@ -214,13 +206,10 @@ string LinuxParser::Ram(int pid) {
   std::ifstream filestream(file);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
-      //std::replace(line.begin(), line.end(), ' ', '_');
       std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "VmSize:") {
+      linestream >> key >> value;
+      if (key == "VmSize:")
           return value;
-        }
-      }
     }
   }
   return value;
@@ -235,13 +224,10 @@ string LinuxParser::Uid(int pid) {
   std::ifstream filestream(file);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
-      //std::replace(line.begin(), line.end(), ' ', '_');
       std::istringstream linestream(line);
-      while (linestream >> key >> value) {
-        if (key == "Uid:") {
+      linestream >> key >> value;
+      if (key == "Uid:")
           return value;
-        }
-      }
     }
   }
   return value;
@@ -261,14 +247,12 @@ string LinuxParser::User(int pid) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
       while (linestream >> username >> value1 >> value2) {
-        if (value2 == uid) {
-          return username;
-        }
-        username="";
+          if (value2 == uid)
+              return username;
+          username="";
       }
     }
   }
-  filestream.close();
   return username;
 }
 
