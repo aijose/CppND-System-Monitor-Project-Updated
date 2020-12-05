@@ -1,5 +1,5 @@
-#include "../include/processor.h"
-#include "../include/linux_parser.h"
+#include "processor.h"
+#include "linux_parser.h"
 #include <vector>
 #include <chrono>
 #include <thread>

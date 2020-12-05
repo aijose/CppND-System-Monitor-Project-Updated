@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "../include/process.h"
-#include "../include/processor.h"
-#include "../include/system.h"
-#include "../include/linux_parser.h"
+#include "process.h"
+#include "processor.h"
+#include "system.h"
+#include "linux_parser.h"
 
 using std::set;
 using std::size_t;
