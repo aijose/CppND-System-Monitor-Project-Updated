@@ -18,7 +18,6 @@ string LinuxParser::OperatingSystem() {
   string key;
   string value;
   std::ifstream filestream(kOSPath);
-  remap  gt nnoremap if : tabedit nnoremap <ScrollWheelDown>
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::replace(line.begin(), line.end(), ' ', '_');
