@@ -18,7 +18,6 @@ using std::vector;
  * 8 - guest
  * 9 - guest_nice
 */
-// TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
     int sleep_interval = 100;
 
