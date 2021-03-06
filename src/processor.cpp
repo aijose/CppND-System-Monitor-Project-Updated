@@ -18,7 +18,7 @@ using std::vector;
  * 8 - guest
  * 9 - guest_nice
 */
-float Processor::Utilization() {
+double Processor::Utilization() {
     int sleep_interval = 100;
 
     // Read "previous" cpu utilization
@@ -43,7 +43,7 @@ float Processor::Utilization() {
     unsigned long long int diff_total = current_total - prev_total;
     unsigned long long int diff_idle = current_idle - prev_idle;
 
-    float cpu_percentage = (diff_total - diff_idle)*1.0/diff_total;
+    double cpu_percentage = (diff_total - diff_idle)*1.0/diff_total;
 
     return cpu_percentage;
 }
